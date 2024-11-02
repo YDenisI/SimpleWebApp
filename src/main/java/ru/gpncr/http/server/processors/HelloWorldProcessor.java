@@ -1,6 +1,6 @@
-package server.processors;
+package ru.gpncr.http.server.processors;
 
-import server.HttpRequest;
+import ru.gpncr.http.server.HttpRequest;
 
 import java.io.IOException;
 import java.io.OutputStream;

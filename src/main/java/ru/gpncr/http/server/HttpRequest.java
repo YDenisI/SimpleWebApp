@@ -1,15 +1,20 @@
-package server;
+package ru.gpncr.http.server;
+
+import org.apache.logging.log4j.LogManager;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpRequest {
+    private static final org.apache.logging.log4j.Logger log = LogManager.getLogger(HttpRequest.class);
+
     private String rawRequest;
     private HttpMethod method;
     private String uri;
     private Map<String, String> parameters;
-    private String body;
     private Exception exception;
+    String body;
+    private Map<String, String> headers;
 
     public Exception getException() {
         return exception;
@@ -19,25 +24,26 @@ public class HttpRequest {
         this.exception = exception;
     }
 
-    public String getUri() {
-        return uri;
-    }
-
-    public String getRoutingKey() {
-        return method + " " + uri;
-    }
-
-    public String getBody() {
-        return body;
+    public HttpMethod getMethod() {
+        return method;
     }
 
     public HttpRequest(String rawRequest) {
         this.rawRequest = rawRequest;
+        this.headers = new HashMap<>();
         this.parse();
+    }
+
+    public String getUri() {
+        return uri;
     }
 
     public String getParameter(String key) {
         return parameters.get(key);
+    }
+
+    public String getBody() {
+        return body;
     }
 
     public boolean containsParameter(String key) {
@@ -53,24 +59,43 @@ public class HttpRequest {
         if (uri.contains("?")) {
             String[] elements = uri.split("[?]");
             uri = elements[0];
-            String[] keysValues = elements[1].split("[&]");
-            for (String o : keysValues) {
+            String[] keysValue = elements[1].split("[&]");
+            for (String o : keysValue) {
                 String[] keyValue = o.split("=");
                 parameters.put(keyValue[0], keyValue[1]);
             }
         }
+
         if (method == HttpMethod.POST) {
             this.body = rawRequest.substring(rawRequest.indexOf("\r\n\r\n") + 4);
+        }
+
+        String[] lines = rawRequest.split("\r\n");
+        for (int i = 1; i < lines.length; i++) {
+            String headerLine = lines[i];
+            if (headerLine.isEmpty()) {
+                break;
+            }
+            String[] header = headerLine.split(": ", 2);
+            if (header.length == 2) {
+                headers.put(header[0], header[1]);
+            }
         }
     }
 
     public void info(boolean debug) {
         if (debug) {
-            System.out.println(rawRequest);
+            log.debug(rawRequest);
         }
-        System.out.println("Method: " + method);
-        System.out.println("URI: " + uri);
-        System.out.println("Parameters: " + parameters);
-        System.out.println("Body: "  + body);
+
+        log.info("Method: " + method);
+        log.info("Uri: " + uri);
+        log.info("Parameter: " + parameters);
+        log.info("Body: " + body);
+        log.info("Header: " + headers);
+    }
+
+    public String getRoutingKey() {
+        return method + " " + uri;
     }
 }

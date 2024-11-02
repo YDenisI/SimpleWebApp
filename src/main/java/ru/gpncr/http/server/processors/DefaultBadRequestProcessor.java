@@ -1,19 +1,19 @@
-package server.processors;
+package ru.gpncr.http.server.processors;
 
-import server.HttpRequest;
+import ru.gpncr.http.server.HttpRequest;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public class DefaultNotFoundProcessor implements RequestProcessor {
+public class DefaultBadRequestProcessor implements RequestProcessor {
     @Override
     public void execute(HttpRequest request, OutputStream output) throws IOException {
         String response = "" +
-                "HTTP/1.1 404 Not Found\r\n" +
+                "HTTP/1.1 400 Bad Request\r\n" +
                 "Content-Type: text/html\r\n" +
                 "\r\n" +
-                "<html><body><h1>Page Not Found</h1></body></html>";
+                "<html><body><h1>Bad Request: " + request.getException().getMessage() + "</h1></body></html>";
         output.write(response.getBytes(StandardCharsets.UTF_8));
     }
 }

@@ -1,4 +1,4 @@
-package server.app;
+package ru.gpncr.http.server.app;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

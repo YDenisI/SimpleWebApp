@@ -1,9 +1,9 @@
-package server.processors;
+package ru.gpncr.http.server.processors;
 
 import com.google.gson.Gson;
-import server.HttpRequest;
-import server.app.Item;
-import server.app.ItemsRepository;
+import ru.gpncr.http.server.HttpRequest;
+import ru.gpncr.http.server.app.Item;
+import ru.gpncr.http.server.app.ItemsRepository;
 
 import java.io.IOException;
 import java.io.OutputStream;

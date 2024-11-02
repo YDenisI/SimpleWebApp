@@ -1,4 +1,4 @@
-package server;
+package ru.gpncr.http.server;
 
 public class Application {
     // Домашнее задание:
