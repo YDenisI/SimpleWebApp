@@ -1,19 +1,21 @@
 package ru.gpncr.http.server.processors;
 
 import ru.gpncr.http.server.HttpRequest;
+import ru.gpncr.http.server.SendMessage;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class HelloWorldProcessor implements RequestProcessor {
+    private static final String CONTENT_TYPE = "text/html";
+    private static final String STATUS_CODE_200 = "200 OK";
     @Override
     public void execute(HttpRequest request, OutputStream output) throws IOException {
-        String response = "" +
-                "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: text/html\r\n" +
-                "\r\n" +
-                "<html><body><h1>Hello World!!!</h1><table><tr><td>1</td><td>2</td></tr></table></body></html>";
-        output.write(response.getBytes(StandardCharsets.UTF_8));
+
+        String message = "Hello World!!!";
+        SendMessage response = new SendMessage(CONTENT_TYPE, message, STATUS_CODE_200);
+        response.send(output);
+
     }
 }
